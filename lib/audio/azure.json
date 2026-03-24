@@ -13829,7 +13829,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (wuu-CN, XiaotongNeural)",
       "DisplayName": "Xiaotong",
-      "LocalName": "晓彤",
+      "LocalName": "曉彤",
       "ShortName": "wuu-CN-XiaotongNeural",
       "Gender": "Female",
       "Locale": "wuu-CN",
@@ -13848,7 +13848,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (wuu-CN, YunzheNeural)",
       "DisplayName": "Yunzhe",
-      "LocalName": "云哲",
+      "LocalName": "雲哲",
       "ShortName": "wuu-CN-YunzheNeural",
       "Gender": "Male",
       "Locale": "wuu-CN",
@@ -13867,7 +13867,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (yue-CN, XiaoMinNeural)",
       "DisplayName": "XiaoMin",
-      "LocalName": "晓敏",
+      "LocalName": "曉敏",
       "ShortName": "yue-CN-XiaoMinNeural",
       "Gender": "Female",
       "Locale": "yue-CN",
@@ -13886,7 +13886,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (yue-CN, YunSongNeural)",
       "DisplayName": "YunSong",
-      "LocalName": "云松",
+      "LocalName": "雲松",
       "ShortName": "yue-CN-YunSongNeural",
       "Gender": "Male",
       "Locale": "yue-CN",
@@ -14010,7 +14010,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)",
       "DisplayName": "Xiaoxiao",
-      "LocalName": "晓晓",
+      "LocalName": "曉曉",
       "ShortName": "zh-CN-XiaoxiaoNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14051,7 +14051,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunxiNeural)",
       "DisplayName": "Yunxi",
-      "LocalName": "云希",
+      "LocalName": "雲希",
       "ShortName": "zh-CN-YunxiNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -14085,7 +14085,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunjianNeural)",
       "DisplayName": "Yunjian",
-      "LocalName": "云健",
+      "LocalName": "雲健",
       "ShortName": "zh-CN-YunjianNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -14116,7 +14116,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyiNeural)",
       "DisplayName": "Xiaoyi",
-      "LocalName": "晓伊",
+      "LocalName": "曉伊",
       "ShortName": "zh-CN-XiaoyiNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14146,7 +14146,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunyangNeural)",
       "DisplayName": "Yunyang",
-      "LocalName": "云扬",
+      "LocalName": "雲揚",
       "ShortName": "zh-CN-YunyangNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -14166,7 +14166,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaochenNeural)",
       "DisplayName": "Xiaochen",
-      "LocalName": "晓辰",
+      "LocalName": "曉辰",
       "ShortName": "zh-CN-XiaochenNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14202,7 +14202,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaochenMultilingualNeural)",
       "DisplayName": "Xiaochen Multilingual",
-      "LocalName": "晓辰 多语言",
+      "LocalName": "曉辰 多語言",
       "ShortName": "zh-CN-XiaochenMultilingualNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14313,7 +14313,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaohanNeural)",
       "DisplayName": "Xiaohan",
-      "LocalName": "晓涵",
+      "LocalName": "曉涵",
       "ShortName": "zh-CN-XiaohanNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14344,7 +14344,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaomengNeural)",
       "DisplayName": "Xiaomeng",
-      "LocalName": "晓梦",
+      "LocalName": "曉夢",
       "ShortName": "zh-CN-XiaomengNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14364,7 +14364,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaomoNeural)",
       "DisplayName": "Xiaomo",
-      "LocalName": "晓墨",
+      "LocalName": "曉墨",
       "ShortName": "zh-CN-XiaomoNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14407,7 +14407,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoqiuNeural)",
       "DisplayName": "Xiaoqiu",
-      "LocalName": "晓秋",
+      "LocalName": "曉秋",
       "ShortName": "zh-CN-XiaoqiuNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14426,7 +14426,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaorouNeural)",
       "DisplayName": "Xiaorou",
-      "LocalName": "晓柔",
+      "LocalName": "曉柔",
       "ShortName": "zh-CN-XiaorouNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14444,7 +14444,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoruiNeural)",
       "DisplayName": "Xiaorui",
-      "LocalName": "晓睿",
+      "LocalName": "曉睿",
       "ShortName": "zh-CN-XiaoruiNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14481,7 +14481,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoshuangMultilingualNeural)",
       "DisplayName": "Xiaoshuang Multilingual",
-      "LocalName": "晓双 多语言",
+      "LocalName": "曉雙 多語言",
       "ShortName": "zh-CN-XiaoshuangMultilingualNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14593,7 +14593,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoshuangNeural)",
       "DisplayName": "Xiaoshuang",
-      "LocalName": "晓双",
+      "LocalName": "曉雙",
       "ShortName": "zh-CN-XiaoshuangNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14613,7 +14613,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoDialectsNeural)",
       "DisplayName": "Xiaoxiao Dialects",
-      "LocalName": "晓晓 方言",
+      "LocalName": "曉曉 方言",
       "ShortName": "zh-CN-XiaoxiaoDialectsNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14646,7 +14646,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoMultilingualNeural)",
       "DisplayName": "Xiaoxiao Multilingual",
-      "LocalName": "晓晓 多语言",
+      "LocalName": "曉曉 多語言",
       "ShortName": "zh-CN-XiaoxiaoMultilingualNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14766,7 +14766,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyanNeural)",
       "DisplayName": "Xiaoyan",
-      "LocalName": "晓颜",
+      "LocalName": "曉顏",
       "ShortName": "zh-CN-XiaoyanNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14829,7 +14829,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyouMultilingualNeural)",
       "DisplayName": "Xiaoyou Multilingual",
-      "LocalName": "晓悠 多语言",
+      "LocalName": "曉悠 多語言",
       "ShortName": "zh-CN-XiaoyouMultilingualNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14941,7 +14941,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyouNeural)",
       "DisplayName": "Xiaoyou",
-      "LocalName": "晓悠",
+      "LocalName": "曉悠",
       "ShortName": "zh-CN-XiaoyouNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -14977,7 +14977,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyuMultilingualNeural)",
       "DisplayName": "Xiaoyu Multilingual",
-      "LocalName": "晓宇 多语言",
+      "LocalName": "曉宇 多語言",
       "ShortName": "zh-CN-XiaoyuMultilingualNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -15088,7 +15088,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaozhenNeural)",
       "DisplayName": "Xiaozhen",
-      "LocalName": "晓甄",
+      "LocalName": "曉甄",
       "ShortName": "zh-CN-XiaozhenNeural",
       "Gender": "Female",
       "Locale": "zh-CN",
@@ -15220,7 +15220,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunfengNeural)",
       "DisplayName": "Yunfeng",
-      "LocalName": "云枫",
+      "LocalName": "雲楓",
       "ShortName": "zh-CN-YunfengNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15240,7 +15240,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunhaoNeural)",
       "DisplayName": "Yunhao",
-      "LocalName": "云皓",
+      "LocalName": "雲皓",
       "ShortName": "zh-CN-YunhaoNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15260,7 +15260,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunjieNeural)",
       "DisplayName": "Yunjie",
-      "LocalName": "云杰",
+      "LocalName": "雲傑",
       "ShortName": "zh-CN-YunjieNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15305,7 +15305,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunxiaNeural)",
       "DisplayName": "Yunxia",
-      "LocalName": "云夏",
+      "LocalName": "雲夏",
       "ShortName": "zh-CN-YunxiaNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15452,7 +15452,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunyeNeural)",
       "DisplayName": "Yunye",
-      "LocalName": "云野",
+      "LocalName": "雲野",
       "ShortName": "zh-CN-YunyeNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15491,7 +15491,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunyiMultilingualNeural)",
       "DisplayName": "Yunyi Multilingual",
-      "LocalName": "云逸 多语言",
+      "LocalName": "雲逸 多語言",
       "ShortName": "zh-CN-YunyiMultilingualNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15602,7 +15602,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunzeNeural)",
       "DisplayName": "Yunze",
-      "LocalName": "云泽",
+      "LocalName": "雲澤",
       "ShortName": "zh-CN-YunzeNeural",
       "Gender": "Male",
       "Locale": "zh-CN",
@@ -15633,7 +15633,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-guangxi, YunqiNeural)",
       "DisplayName": "Yunqi",
-      "LocalName": "云奇 广西",
+      "LocalName": "雲奇 廣西",
       "ShortName": "zh-CN-guangxi-YunqiNeural",
       "Gender": "Male",
       "Locale": "zh-CN-guangxi",
@@ -15651,7 +15651,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-henan, YundengNeural)",
       "DisplayName": "Yundeng",
-      "LocalName": "云登",
+      "LocalName": "雲登",
       "ShortName": "zh-CN-henan-YundengNeural",
       "Gender": "Male",
       "Locale": "zh-CN-henan",
@@ -15670,7 +15670,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-liaoning, XiaobeiNeural)",
       "DisplayName": "Xiaobei",
-      "LocalName": "晓北 辽宁",
+      "LocalName": "曉北 遼寧",
       "ShortName": "zh-CN-liaoning-XiaobeiNeural",
       "Gender": "Female",
       "Locale": "zh-CN-liaoning",
@@ -15689,7 +15689,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-liaoning, YunbiaoNeural)",
       "DisplayName": "Yunbiao",
-      "LocalName": "云彪 辽宁",
+      "LocalName": "雲彪 遼寧",
       "ShortName": "zh-CN-liaoning-YunbiaoNeural",
       "Gender": "Male",
       "Locale": "zh-CN-liaoning",
@@ -15707,7 +15707,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-shaanxi, XiaoniNeural)",
       "DisplayName": "Xiaoni",
-      "LocalName": "晓妮",
+      "LocalName": "曉妮",
       "ShortName": "zh-CN-shaanxi-XiaoniNeural",
       "Gender": "Female",
       "Locale": "zh-CN-shaanxi",
@@ -15726,7 +15726,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-shandong, YunxiangNeural)",
       "DisplayName": "Yunxiang",
-      "LocalName": "云翔",
+      "LocalName": "雲翔",
       "ShortName": "zh-CN-shandong-YunxiangNeural",
       "Gender": "Male",
       "Locale": "zh-CN-shandong",
@@ -15745,7 +15745,7 @@
     {
       "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-sichuan, YunxiNeural)",
       "DisplayName": "Yunxi",
-      "LocalName": "云希 四川",
+      "LocalName": "雲希 四川",
       "ShortName": "zh-CN-sichuan-YunxiNeural",
       "Gender": "Male",
       "Locale": "zh-CN-sichuan",

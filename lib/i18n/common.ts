@@ -79,3 +79,44 @@ export const commonEnUS = {
     exportFailed: 'Export failed',
   },
 } as const;
+
+export const commonZhTW = {
+  common: {
+    you: '你',
+    confirm: '確定',
+    cancel: '取消',
+    loading: '載入中...',
+  },
+  home: {
+    slogan: 'Generative Learning in Multi-Agent Interactive Classroom',
+    greeting: '嗨，',
+  },
+  toolbar: {
+    languageHint: '課程將以此語言生成',
+    pdfParser: '解析器',
+    pdfUpload: '上傳 PDF',
+    removePdf: '移除檔案',
+    webSearchOn: '已開啟',
+    webSearchOff: '點選開啟',
+    webSearchDesc: '生成前搜尋網路獲取最新資料，讓內容更豐富準確',
+    webSearchProvider: '搜尋引擎',
+    webSearchNoProvider: '請在設定中配置搜尋引擎 API Key',
+    selectProvider: '選擇模型服務商',
+    configureProvider: '配置模型',
+    configureProviderHint: '請先配置至少一個模型服務商才能生成課程',
+    enterClassroom: '進入課堂',
+    advancedSettings: '高階設定',
+    ttsTitle: '語音合成',
+    ttsHint: '選擇 AI 教師的朗讀音色',
+    ttsPreview: '試聽',
+    ttsPreviewing: '播放中...',
+  },
+  export: {
+    pptx: '匯出 PPTX',
+    resourcePack: '匯出教學資源包',
+    resourcePackDesc: 'PPTX + 互動式頁面',
+    exporting: '正在匯出...',
+    exportSuccess: '匯出成功',
+    exportFailed: '匯出失敗',
+  },
+} as const;
