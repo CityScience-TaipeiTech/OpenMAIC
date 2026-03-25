@@ -82,7 +82,7 @@ function AgentVoicePill({
 
       const courseLanguage =
         (typeof localStorage !== 'undefined' && localStorage.getItem('generationLanguage')) ||
-        'zh-CN';
+        (localStorage.getItem('locale') === 'zh-TW' ? 'zh-TW' : 'zh-CN');
       const previewText = courseLanguage === 'en-US' ? 'Welcome to AI Classroom' : '欢迎来到AI课堂';
 
       if (providerId === 'browser-native-tts') {
@@ -295,7 +295,7 @@ function TeacherVoicePill({
 
       const courseLanguage =
         (typeof localStorage !== 'undefined' && localStorage.getItem('generationLanguage')) ||
-        'zh-CN';
+        (localStorage.getItem('locale') === 'zh-TW' ? 'zh-TW' : 'zh-CN');
       const previewText = courseLanguage === 'en-US' ? 'Welcome to AI Classroom' : '欢迎来到AI课堂';
 
       if (providerId === 'browser-native-tts') {
