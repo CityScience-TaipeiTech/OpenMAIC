@@ -63,7 +63,7 @@ interface FormState {
 const initialFormState: FormState = {
   pdfFile: null,
   requirement: '',
-  language: 'zh-CN',
+  language: 'zh-TW',
   webSearch: false,
 };
 
