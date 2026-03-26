@@ -1,46 +1,46 @@
-# PDF 解析系统
+# PDF 解析系統
 
-提供统一接口支持多种 PDF 解析提供商。
+提供統一介面支援多種 PDF 解析提供商。
 
-## 支持的提供商
+## 支援的提供商
 
-### 1. unpdf (内置)
+### 1. unpdf (內建)
 
-- **成本**: 免费，内置
-- **特性**: 基础文本提取、图片提取
-- **要求**: 无
-- **使用**: 直接上传 PDF 文件
+- **成本**: 免費，內建
+- **特性**: 基礎文字提取、圖片提取
+- **要求**: 無
+- **使用**: 直接上傳 PDF 檔案
 
 ### 2. MinerU (本地部署)
 
-- **成本**: 免费（需要自己部署）
+- **成本**: 免費（需要自己部署）
 - **特性**:
-  - 高级文本提取（保留 Markdown 布局）
-  - 表格识别
+  - 高階文字提取（保留 Markdown 佈局）
+  - 表格識別
   - 公式提取（LaTeX）
-  - 更好的 OCR 支持
-  - 多种输出格式（markdown, JSON, docx, html, latex）
+  - 更好的 OCR 支援
+  - 多種輸出格式（markdown, JSON, docx, html, latex）
 - **要求**:
-  - 部署 MinerU 服务（Docker 或源码）
-  - 配置服务器地址
-- **优势**: 数据隐私、无文件大小限制
+  - 部署 MinerU 服務（Docker 或原始碼）
+  - 配置伺服器地址
+- **優勢**: 資料隱私、無檔案大小限制
 
-## 快速开始
+## 快速開始
 
-### 部署 MinerU（可选）
+### 部署 MinerU（可選）
 
 ```bash
-# Docker 部署（推荐）
+# Docker 部署（推薦）
 docker pull opendatalab/mineru:latest
 docker run -d --name mineru -p 8080:8080 opendatalab/mineru:latest
 
-# 验证
+# 驗證
 curl http://localhost:8080/api/health
 ```
 
 ### API 使用
 
-#### 使用 unpdf（文件上传）
+#### 使用 unpdf（檔案上傳）
 
 ```typescript
 const formData = new FormData();
@@ -56,7 +56,7 @@ const result = await response.json();
 // result.data: ParsedPdfContent
 ```
 
-#### 使用 MinerU（本地服务）
+#### 使用 MinerU（本地服務）
 
 ```typescript
 const formData = new FormData();
@@ -73,14 +73,14 @@ const result = await response.json();
 // result.data: ParsedPdfContent with imageMapping
 ```
 
-## 响应格式
+## 響應格式
 
 ```typescript
 interface ParsedPdfContent {
-  text: string; // 提取的文本（MinerU 为 Markdown）
-  images: string[]; // Base64 图片数组
+  text: string; // 提取的文字（MinerU 為 Markdown）
+  images: string[]; // Base64 圖片陣列
 
-  // 扩展特性（MinerU）
+  // 擴充套件特性（MinerU）
   tables?: Array<{
     page: number;
     data: string[][];
@@ -107,21 +107,21 @@ interface ParsedPdfContent {
     fileSize?: number;
     processingTime?: number;
 
-    // 用于内容生成流程（MinerU）
+    // 用於內容生成流程（MinerU）
     imageMapping?: Record<string, string>; // img_1 -> base64 URL
     pdfImages?: Array<{
       id: string; // img_1, img_2, etc.
       src: string; // base64 data URL
-      pageNumber: number; // PDF 页码
-      description?: string; // 图片描述
+      pageNumber: number; // PDF 頁碼
+      description?: string; // 圖片描述
     }>;
   };
 }
 ```
 
-## 与内容生成集成
+## 與內容生成整合
 
-MinerU 解析器与内容生成流程无缝集成：
+MinerU 解析器與內容生成流程無縫整合：
 
 ```typescript
 // 1. 解析 PDF
@@ -133,43 +133,43 @@ const parseResult = await parsePDF(
   buffer,
 );
 
-// 2. 提取数据
+// 2. 提取資料
 const pdfText = parseResult.text; // Markdown（含 img_1 引用）
-const pdfImages = parseResult.metadata.pdfImages; // 图片数组
-const imageMapping = parseResult.metadata.imageMapping; // 图片映射
+const pdfImages = parseResult.metadata.pdfImages; // 圖片陣列
+const imageMapping = parseResult.metadata.imageMapping; // 圖片對映
 
-// 3. 生成场景大纲
+// 3. 生成場景大綱
 await generateSceneOutlinesFromRequirements(
   requirements,
-  pdfText, // Markdown 内容
-  pdfImages, // 带页码的图片
+  pdfText, // Markdown 內容
+  pdfImages, // 帶頁碼的圖片
   aiCall,
 );
 
-// 4. 生成场景（含图片）
+// 4. 生成場景（含圖片）
 await buildSceneFromOutline(
   outline,
   aiCall,
   stageId,
-  assignedImages, // 从 pdfImages 筛选
-  imageMapping, // 用于解析 img_1 到实际 URL
+  assignedImages, // 從 pdfImages 篩選
+  imageMapping, // 用於解析 img_1 到實際 URL
 );
 ```
 
-## 图片处理流程
+## 圖片處理流程
 
-MinerU 的图片处理：
+MinerU 的圖片處理：
 
-1. **提取**: PDF → MinerU → Markdown + 图片
-2. **转换**: `![alt](images/img_1.png)` → `![alt](img_1)`
-3. **映射**: 创建 `{ "img_1": "data:image/png;base64,..." }`
-4. **生成**: AI 使用 `img_1` 引用生成幻灯片
-5. **解析**: `resolveImageIds()` 替换为实际 URL
-6. **渲染**: 幻灯片显示图片
+1. **提取**: PDF → MinerU → Markdown + 圖片
+2. **轉換**: `![alt](images/img_1.png)` → `![alt](img_1)`
+3. **對映**: 建立 `{ "img_1": "data:image/png;base64,..." }`
+4. **生成**: AI 使用 `img_1` 引用生成幻燈片
+5. **解析**: `resolveImageIds()` 替換為實際 URL
+6. **渲染**: 幻燈片顯示圖片
 
 ## 配置
 
-### 全局设置
+### 全域性設定
 
 ```typescript
 import { useSettingsStore } from '@/lib/store/settings';
@@ -185,18 +185,18 @@ useSettingsStore.setState({
 });
 ```
 
-### 请求级配置
+### 請求級配置
 
 ```typescript
-// 在 API 调用时覆盖全局设置
+// 在 API 呼叫時覆蓋全域性設定
 formData.append('providerId', 'mineru');
 formData.append('baseUrl', 'http://your-server:8080');
 formData.append('apiKey', 'optional');
 ```
 
-## 添加新的提供商
+## 新增新的提供商
 
-### 1. 定义提供商
+### 1. 定義提供商
 
 `lib/pdf/constants.ts`:
 
@@ -211,7 +211,7 @@ export const PDF_PROVIDERS = {
 };
 ```
 
-### 2. 实现解析器
+### 2. 實現解析器
 
 `lib/pdf/pdf-providers.ts`:
 
@@ -220,7 +220,7 @@ async function parseWithMyProvider(
   config: PDFParserConfig,
   pdfBuffer: Buffer
 ): Promise<ParsedPdfContent> {
-  // 实现解析逻辑
+  // 實現解析邏輯
   return {
     text: '...',
     images: [...],
@@ -232,7 +232,7 @@ async function parseWithMyProvider(
 }
 ```
 
-### 3. 添加到路由
+### 3. 新增到路由
 
 ```typescript
 switch (config.providerId) {
@@ -248,47 +248,47 @@ switch (config.providerId) {
 }
 ```
 
-## 调试工具
+## 除錯工具
 
-访问 http://localhost:3000/debug/pdf-parser 测试解析功能：
+訪問 http://localhost:3000/debug/pdf-parser 測試解析功能：
 
-- 切换提供商（unpdf/MinerU）
-- 上传 PDF 文件
-- 配置服务器地址
-- 查看解析结果
-- 检查图片映射
+- 切換提供商（unpdf/MinerU）
+- 上傳 PDF 檔案
+- 配置伺服器地址
+- 檢視解析結果
+- 檢查圖片對映
 
-## 常见问题
+## 常見問題
 
-### Q: MinerU 服务无法连接？
+### Q: MinerU 服務無法連線？
 
-**A**: 检查：
+**A**: 檢查：
 
 ```bash
-# 服务状态
+# 服務狀態
 docker ps | grep mineru
 
-# 网络连通性
+# 網路連通性
 curl http://localhost:8080/api/health
 
-# 日志
+# 日誌
 docker logs mineru
 ```
 
-### Q: 图片不显示？
+### Q: 圖片不顯示？
 
-**A**: 确保：
+**A**: 確保：
 
-1. `imageMapping` 正确传递到 scene-stream API
-2. 图片 ID 格式正确（img_1, img_2）
-3. Base64 编码完整
+1. `imageMapping` 正確傳遞到 scene-stream API
+2. 圖片 ID 格式正確（img_1, img_2）
+3. Base64 編碼完整
 
 ### Q: 解析速度慢？
 
-**A**: 优化：
+**A**: 最佳化：
 
 ```bash
-# 增加 Docker 资源
+# 增加 Docker 資源
 docker run -d \
   --name mineru \
   -p 8080:8080 \
@@ -297,22 +297,22 @@ docker run -d \
   opendatalab/mineru:latest
 ```
 
-### Q: unpdf vs MinerU 如何选择？
+### Q: unpdf vs MinerU 如何選擇？
 
-**A**: 选择建议：
+**A**: 選擇建議：
 
-| 场景               | 推荐   |
+| 場景               | 推薦   |
 | ------------------ | ------ |
-| 简单 PDF（纯文本） | unpdf  |
+| 簡單 PDF（純文字） | unpdf  |
 | 包含表格、公式     | MinerU |
-| 需要保留布局       | MinerU |
-| 快速测试           | unpdf  |
-| 生产环境           | MinerU |
-| 无法部署服务       | unpdf  |
+| 需要保留佈局       | MinerU |
+| 快速測試           | unpdf  |
+| 生產環境           | MinerU |
+| 無法部署服務       | unpdf  |
 
-## 性能建议
+## 效能建議
 
-### MinerU 并发处理
+### MinerU 併發處理
 
 ```typescript
 const files = [file1, file2, file3];
@@ -330,10 +330,10 @@ const results = await Promise.all(
 );
 ```
 
-### 结果缓存
+### 結果快取
 
 ```typescript
-// 考虑缓存解析结果
+// 考慮快取解析結果
 const cacheKey = `pdf_${fileHash}`;
 const cached = localStorage.getItem(cacheKey);
 if (cached) {
@@ -341,15 +341,15 @@ if (cached) {
 }
 ```
 
-## 参考资源
+## 參考資源
 
 - **MinerU GitHub**: https://github.com/opendatalab/MinerU
-- **快速开始**: `/MINERU_QUICKSTART.md`
-- **变更说明**: `/MINERU_LOCAL_DEPLOYMENT.md`
-- **调试工具**: http://localhost:3000/debug/pdf-parser
+- **快速開始**: `/MINERU_QUICKSTART.md`
+- **變更說明**: `/MINERU_LOCAL_DEPLOYMENT.md`
+- **除錯工具**: http://localhost:3000/debug/pdf-parser
 
 ---
 
-**最后更新**: 2026-02-11
-**模式**: 本地自托管
-**状态**: 生产就绪
+**最後更新**: 2026-02-11
+**模式**: 本地自託管
+**狀態**: 生產就緒
