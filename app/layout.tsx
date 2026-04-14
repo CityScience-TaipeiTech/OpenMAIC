@@ -19,8 +19,13 @@ const inter = localFont({
 
 export const metadata: Metadata = {
   title: 'AI Interactive Classroom',
+  title: 'AI Interactive Classroom',
   description:
     'The open-source AI interactive classroom. Upload a PDF to instantly generate an immersive, multi-agent learning experience.',
+  icons: {
+    icon: '/assets/logo-csl-black.png',
+    apple: '/assets/logo-csl-black.png',
+  },
   icons: {
     icon: '/assets/logo-csl-black.png',
     apple: '/assets/logo-csl-black.png',
