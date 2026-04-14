@@ -252,7 +252,7 @@ function StreamingOutlineVisualizer({ outlines }: { outlines: SceneOutline[] }) 
 
   return (
     <div className="w-40 h-52 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl p-4 overflow-hidden relative rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-      <div className="absolute top-0 inset-x-0 h-1 bg-blue-500/50" />
+      <div className="absolute top-0 inset-x-0 h-1 bg-orange-500/50" />
       <div className="w-1/3 h-2 bg-slate-100 dark:bg-slate-700 rounded mb-3" />
       <div className="space-y-1.5 font-mono text-[8px] text-muted-foreground leading-tight">
         {allLines.length === 0 ? (
@@ -277,7 +277,7 @@ function StreamingOutlineVisualizer({ outlines }: { outlines: SceneOutline[] }) 
               className={cn(
                 'truncate',
                 !line.startsWith('   ')
-                  ? 'text-blue-600 dark:text-blue-400 font-semibold text-[9px]'
+                  ? 'text-orange-600 dark:text-orange-400 font-semibold text-[9px]'
                   : 'pl-1 opacity-80',
               )}
             >
@@ -287,7 +287,7 @@ function StreamingOutlineVisualizer({ outlines }: { outlines: SceneOutline[] }) 
         )}
       </div>
       <motion.div
-        className="absolute bottom-3 right-3 size-2 bg-blue-500 rounded-full"
+        className="absolute bottom-3 right-3 size-2 bg-orange-500 rounded-full"
         animate={{ opacity: [0, 1, 0] }}
         transition={{ repeat: Infinity, duration: 0.8 }}
       />
@@ -303,7 +303,7 @@ function AgentGenerationVisualizer() {
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="w-14 h-20 rounded-lg bg-gradient-to-br from-purple-400 to-blue-500 dark:from-purple-600 dark:to-blue-700 shadow-lg"
+            className="w-14 h-20 rounded-lg bg-gradient-to-br from-orange-400 to-amber-500 dark:from-orange-600 dark:to-amber-700 shadow-lg"
             animate={{ y: [0, -8, 0], rotateZ: [0, 3, -3, 0] }}
             transition={{
               duration: 1.5,
@@ -351,14 +351,14 @@ function ContentVisualizer() {
           color: 'blue',
           label: 'SLIDE',
           badge:
-            'bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800',
+            'bg-orange-100 text-orange-600 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800',
         };
       case 1:
         return {
           color: 'purple',
           label: 'QUIZ',
           badge:
-            'bg-purple-100 text-purple-600 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-800',
+            'bg-orange-100 text-orange-600 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800',
         };
       case 2:
         return {
@@ -389,7 +389,7 @@ function ContentVisualizer() {
         className={cn(
           'absolute inset-0 blur-3xl rounded-full transition-colors duration-1000',
           theme.color === 'blue' && 'bg-blue-500/10',
-          theme.color === 'purple' && 'bg-purple-500/10',
+          theme.color === 'purple' && 'bg-orange-500/10',
           theme.color === 'amber' && 'bg-amber-500/10',
           theme.color === 'emerald' && 'bg-emerald-500/10',
         )}
@@ -404,7 +404,7 @@ function ContentVisualizer() {
           className={cn(
             'absolute border rounded-full transition-colors duration-1000',
             theme.color === 'blue' && 'border-blue-500/10',
-            theme.color === 'purple' && 'border-purple-500/10',
+            theme.color === 'purple' && 'border-orange-500/10',
             theme.color === 'amber' && 'border-amber-500/10',
             theme.color === 'emerald' && 'border-emerald-500/10',
           )}
@@ -436,7 +436,7 @@ function ContentVisualizer() {
             className={cn(
               'absolute inset-0 bg-white dark:bg-slate-800 rounded-xl border shadow-xl overflow-hidden flex flex-col p-3 origin-center',
               theme.color === 'blue' && 'border-blue-200 dark:border-blue-900/30',
-              theme.color === 'purple' && 'border-purple-200 dark:border-purple-900/30',
+              theme.color === 'purple' && 'border-orange-200 dark:border-orange-900/30',
               theme.color === 'amber' && 'border-amber-200 dark:border-amber-900/30',
               theme.color === 'emerald' && 'border-emerald-200 dark:border-emerald-900/30',
             )}
@@ -461,7 +461,7 @@ function ContentVisualizer() {
                   initial={{ width: '0%' }}
                   animate={{ width: '55%' }}
                   transition={{ delay: 0.2 }}
-                  className="h-2 bg-blue-500/20 rounded-full mb-3 shrink-0"
+                  className="h-2 bg-orange-500/20 rounded-full mb-3 shrink-0"
                 />
                 <div className="flex gap-2 flex-1">
                   <div className="flex-1 space-y-2">
@@ -479,9 +479,9 @@ function ContentVisualizer() {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center shrink-0"
+                    className="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center shrink-0"
                   >
-                    <BarChart3 className="size-6 text-blue-500/60" />
+                    <BarChart3 className="size-6 text-orange-500/60" />
                   </motion.div>
                 </div>
               </div>
@@ -496,7 +496,7 @@ function ContentVisualizer() {
                   transition={{ delay: 0.2 }}
                   className="flex justify-center mb-1"
                 >
-                  <div className="h-2 w-3/4 bg-purple-500/20 rounded-full" />
+                  <div className="h-2 w-3/4 bg-orange-500/20 rounded-full" />
                 </motion.div>
 
                 <div className="grid grid-cols-2 gap-2">
@@ -509,7 +509,7 @@ function ContentVisualizer() {
                       className={cn(
                         'h-6 rounded border flex items-center px-2',
                         i === 1
-                          ? 'bg-purple-500 text-white border-purple-500'
+                          ? 'bg-orange-500 text-white border-orange-500'
                           : 'bg-slate-50 dark:bg-slate-700/50 border-slate-100 dark:border-slate-700',
                       )}
                     >
@@ -632,9 +632,9 @@ function ActionsVisualizer() {
     {
       icon: MessageSquare,
       label: 'Speech',
-      color: 'text-violet-500',
-      activeBg: 'bg-violet-500/10',
-      activeBorder: 'border-violet-200 dark:border-violet-800',
+      color: 'text-orange-500',
+      activeBg: 'bg-orange-500/10',
+      activeBorder: 'border-orange-200 dark:border-orange-800',
     },
     {
       icon: Focus,
@@ -646,9 +646,9 @@ function ActionsVisualizer() {
     {
       icon: MessageSquare,
       label: 'Speech',
-      color: 'text-violet-500',
-      activeBg: 'bg-violet-500/10',
-      activeBorder: 'border-violet-200 dark:border-violet-800',
+      color: 'text-orange-500',
+      activeBg: 'bg-orange-500/10',
+      activeBorder: 'border-orange-200 dark:border-orange-800',
     },
     {
       icon: Play,
@@ -660,9 +660,9 @@ function ActionsVisualizer() {
     {
       icon: MessageSquare,
       label: 'Speech',
-      color: 'text-violet-500',
-      activeBg: 'bg-violet-500/10',
-      activeBorder: 'border-violet-200 dark:border-violet-800',
+      color: 'text-orange-500',
+      activeBg: 'bg-orange-500/10',
+      activeBorder: 'border-orange-200 dark:border-orange-800',
     },
   ];
 
@@ -681,7 +681,7 @@ function ActionsVisualizer() {
     <div className="size-56 relative flex items-center justify-center">
       {/* Background pulse */}
       <motion.div
-        className="absolute inset-0 blur-3xl rounded-full bg-violet-500/8"
+        className="absolute inset-0 blur-3xl rounded-full bg-orange-500/8"
         animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 3.5, repeat: Infinity }}
       />
@@ -690,12 +690,12 @@ function ActionsVisualizer() {
       <div className="w-44 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden relative">
         {/* Header */}
         <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
-          <Clapperboard className="size-3 text-violet-500" />
+          <Clapperboard className="size-3 text-orange-500" />
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: '50%' }}
             transition={{ delay: 0.2 }}
-            className="h-1.5 bg-violet-500/20 rounded-full"
+            className="h-1.5 bg-orange-500/20 rounded-full"
           />
         </div>
 
@@ -703,7 +703,7 @@ function ActionsVisualizer() {
         <div className="p-2 space-y-1.5 relative">
           {/* Sliding highlight — absolute, animates via y transform, no layout impact */}
           <motion.div
-            className="absolute left-2 right-2 rounded-lg bg-violet-500/[0.06] dark:bg-violet-400/[0.08]"
+            className="absolute left-2 right-2 rounded-lg bg-orange-500/[0.06] dark:bg-orange-400/[0.08]"
             style={{ height: ROW_H - 6 }}
             animate={{ y: activeIdx * ROW_H }}
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
@@ -747,7 +747,7 @@ function ActionsVisualizer() {
                 </div>
                 {/* Pulsing dot — always rendered, opacity-controlled, no layout shift */}
                 <motion.div
-                  className="size-1.5 rounded-full bg-violet-500"
+                  className="size-1.5 rounded-full bg-orange-500"
                   animate={{ opacity: isActive ? [1, 0.3, 1] : 0 }}
                   transition={isActive ? { duration: 0.8, repeat: Infinity } : { duration: 0.2 }}
                 />

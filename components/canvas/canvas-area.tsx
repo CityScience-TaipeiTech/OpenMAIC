@@ -86,7 +86,7 @@ export function CanvasArea({
         className={cn(
           'flex-1 min-h-0 relative overflow-hidden flex items-center justify-center p-2 transition-colors duration-500',
           currentScene?.type === 'interactive'
-            ? 'bg-blue-50/30 dark:bg-blue-900/10'
+            ? 'bg-orange-50/30 dark:bg-orange-900/10'
             : 'bg-gray-50/30 dark:bg-gray-900/30',
         )}
       >
@@ -160,7 +160,7 @@ export function CanvasArea({
                     {/* Spinner */}
                     <div className="relative w-12 h-12">
                       <div className="absolute inset-0 rounded-full border-2 border-gray-100 dark:border-gray-700" />
-                      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-purple-500 dark:border-t-purple-400 animate-spin" />
+                      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-orange-500 dark:border-t-orange-400 animate-spin" />
                     </div>
                     {/* Text */}
                     <motion.span
@@ -218,7 +218,7 @@ export function CanvasArea({
                     className="w-20 h-20 rounded-full bg-white/95 dark:bg-gray-800/95 flex items-center justify-center shadow-[0_4px_30px_rgba(147,51,234,0.15),inset_0_0_0_1px_rgba(233,213,255,0.5)] dark:shadow-[0_4px_30px_rgba(147,51,234,0.3),inset_0_0_0_1px_rgba(126,34,206,0.3)]"
                     style={{ willChange: 'transform' }}
                   >
-                    <Play className="w-7 h-7 text-purple-600 dark:text-purple-400 fill-purple-600/90 dark:fill-purple-400/90 ml-0.5" />
+                    <Play className="w-7 h-7 text-orange-600 dark:text-orange-400 fill-orange-600/90 dark:fill-orange-400/90 ml-0.5" />
                   </motion.div>
                 </motion.div>
               </motion.div>

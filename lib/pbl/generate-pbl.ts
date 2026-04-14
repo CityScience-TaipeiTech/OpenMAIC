@@ -288,8 +288,8 @@ export async function generatePBLContent(
       model,
       system: systemPrompt,
       prompt:
-        language === 'zh-CN'
-          ? `请设计一个PBL项目。现在从 project_info 模式开始，先设置项目标题和描述。`
+        language === 'zh-TW'
+          ? `請設計一個PBL專案。現在從 project_info 模式開始，先設定專案標題和描述。`
           : `Design a PBL project. Start in project_info mode by setting the project title and description.`,
       tools: pblTools,
       stopWhen: stepCountIs(30),
@@ -361,24 +361,24 @@ async function postProcessPBL(
     callbacks?.onProgress?.('Generating initial questions for first issue...');
 
     const context =
-      language === 'zh-CN'
-        ? `## 任务信息
+      language === 'zh-TW'
+        ? `## 任務資訊
 
-**标题**: ${firstIssue.title}
+**標題**: ${firstIssue.title}
 **描述**: ${firstIssue.description}
-**负责人**: ${firstIssue.person_in_charge}
-${firstIssue.participants.length > 0 ? `**参与者**: ${firstIssue.participants.join('、')}` : ''}
-${firstIssue.notes ? `**备注**: ${firstIssue.notes}` : ''}
+**負責人**: ${firstIssue.person_in_charge}
+${firstIssue.participants.length > 0 ? `**參與者**: ${firstIssue.participants.join('、')}` : ''}
+${firstIssue.notes ? `**備註**: ${firstIssue.notes}` : ''}
 
-## 你的任务
+## 你的任務
 
-根据以上任务信息，生成1-3个具体、可操作的引导问题，帮助学生理解和完成这个任务。每个问题应：
-- 引导学生达成关键学习目标
-- 具体且可操作
-- 帮助分解问题
-- 鼓励批判性思考
+根據以上任務資訊，生成1-3個具體、可操作的引導問題，幫助學生理解和完成這個任務。每個問題應：
+- 引導學生達成關鍵學習目標
+- 具體且可操作
+- 幫助分解問題
+- 鼓勵批判性思考
 
-请以编号列表格式回答。`
+請以編號列表格式回答。`
         : `## Issue Information
 
 **Title**: ${firstIssue.title}
@@ -411,8 +411,8 @@ Format your response as a numbered list.`;
 
     // Add welcome message to chat
     const welcomeMessage =
-      language === 'zh-CN'
-        ? `你好！我是这个任务的提问助手："${firstIssue.title}"\n\n为了引导你的学习，我准备了一些问题：\n\n${generatedQuestions}\n\n随时 @question 我来获取帮助或澄清！`
+      language === 'zh-TW'
+        ? `你好！我是這個任務的提問助手：「${firstIssue.title}」\n\n為了引導你的學習，我準備了一些問題：\n\n${generatedQuestions}\n\n隨時 @question 我來獲取幫助或澄清！`
         : `Hello! I'm your Question Agent for this issue: "${firstIssue.title}"\n\nTo help guide your work, I've prepared some questions for you:\n\n${generatedQuestions}\n\nFeel free to @question me anytime if you need help or clarification!`;
 
     config.chat.messages.push({

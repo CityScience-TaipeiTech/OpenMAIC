@@ -106,15 +106,15 @@ export function SceneSidebar({
         width: displayWidth,
         transition: isDraggingRef.current ? 'none' : 'width 0.3s ease',
       }}
-      className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-gray-100 dark:border-gray-800 shadow-[2px_0_24px_rgba(0,0,0,0.02)] flex flex-col shrink-0 z-20 relative overflow-visible"
+      className="bg-white/80 dark:bg-card/80 backdrop-blur-xl border-r border-gray-100 dark:border-gray-800 shadow-[2px_0_24px_rgba(0,0,0,0.02)] flex flex-col shrink-0 z-20 relative overflow-visible"
     >
       {/* Drag handle */}
       {!collapsed && (
         <div
           onMouseDown={handleDragStart}
-          className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize z-50 group hover:bg-purple-400/30 dark:hover:bg-purple-600/30 active:bg-purple-500/40 dark:active:bg-purple-500/40 transition-colors"
+          className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize z-50 group hover:bg-orange-400/30 dark:hover:bg-orange-600/30 active:bg-orange-500/40 dark:active:bg-orange-500/40 transition-colors"
         >
-          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-gray-300 dark:bg-gray-600 group-hover:bg-purple-400 dark:group-hover:bg-purple-500 transition-colors" />
+          <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-gray-300 dark:bg-gray-600 group-hover:bg-orange-400 dark:group-hover:bg-orange-500 transition-colors" />
         </div>
       )}
 
@@ -126,7 +126,8 @@ export function SceneSidebar({
             className="flex items-center gap-2 cursor-pointer rounded-lg px-1.5 -mx-1.5 py-1 -my-1 hover:bg-gray-100/80 dark:hover:bg-gray-800/60 active:scale-[0.97] transition-all duration-150"
             title={t('generation.backToHome')}
           >
-            <img src="/logo-horizontal.png" alt="OpenMAIC" className="h-6" />
+            <img src="/assets/logo-csl-black.png" alt="Logo" className="h-6 dark:hidden" />
+            <img src="/assets/logo-csl-white.png" alt="Logo" className="h-6 hidden dark:block" />
           </button>
           <button
             onClick={() => onCollapseChange(true)}
@@ -161,7 +162,7 @@ export function SceneSidebar({
                 className={cn(
                   'group relative rounded-lg transition-all duration-200 cursor-pointer flex flex-col gap-1 p-1.5',
                   isActive
-                    ? 'bg-purple-50 dark:bg-purple-900/20 ring-1 ring-purple-200 dark:ring-purple-700'
+                    ? 'bg-orange-50 dark:bg-orange-900/20 ring-1 ring-orange-200 dark:ring-orange-700'
                     : 'hover:bg-gray-50/80 dark:hover:bg-gray-800/50',
                 )}
               >
@@ -172,7 +173,7 @@ export function SceneSidebar({
                       className={cn(
                         'text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shrink-0',
                         isActive
-                          ? 'bg-purple-600 dark:bg-purple-500 text-white shadow-sm shadow-purple-500/30'
+                          ? 'bg-orange-600 dark:bg-orange-500 text-white shadow-sm shadow-orange-500/30'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400',
                       )}
                     >
@@ -183,7 +184,7 @@ export function SceneSidebar({
                       className={cn(
                         'text-xs font-bold truncate transition-colors',
                         isActive
-                          ? 'text-purple-700 dark:text-purple-300'
+                          ? 'text-orange-700 dark:text-orange-300'
                           : 'text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100',
                       )}
                     >
@@ -264,10 +265,10 @@ export function SceneSidebar({
                       </div>
                     ) : scene.type === 'pbl' ? (
                       /* PBL: kanban board with 3 columns */
-                      <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 p-1.5 flex flex-col">
+                      <div className="w-full h-full bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/20 p-1.5 flex flex-col">
                         <div className="flex items-center gap-1 mb-1.5">
-                          <div className="w-1.5 h-1.5 rounded bg-blue-300 dark:bg-blue-600" />
-                          <div className="h-1 w-8 bg-blue-200/60 dark:bg-blue-700/30 rounded-full" />
+                          <div className="w-1.5 h-1.5 rounded bg-orange-300 dark:bg-orange-600" />
+                          <div className="h-1 w-8 bg-orange-200/60 dark:bg-orange-700/30 rounded-full" />
                         </div>
                         <div className="flex-1 flex gap-1 overflow-hidden">
                           {[0, 1, 2].map((col) => (
@@ -279,7 +280,7 @@ export function SceneSidebar({
                                 className={cn(
                                   'h-0.5 w-3 rounded-full mb-0.5',
                                   col === 0
-                                    ? 'bg-blue-300/70'
+                                    ? 'bg-orange-300/70'
                                     : col === 1
                                       ? 'bg-amber-300/70'
                                       : 'bg-green-300/70',
@@ -290,7 +291,7 @@ export function SceneSidebar({
                               }).map((_, i) => (
                                 <div
                                   key={i}
-                                  className="h-2 w-full bg-blue-100/60 dark:bg-blue-800/20 rounded border border-blue-200/30 dark:border-blue-700/20"
+                                  className="h-2 w-full bg-orange-100/60 dark:bg-orange-800/20 rounded border border-orange-200/30 dark:border-orange-700/20"
                                 />
                               ))}
                             </div>
@@ -310,9 +311,9 @@ export function SceneSidebar({
                     {isSlide && (
                       <div
                         className={cn(
-                          'absolute inset-0 bg-purple-500/0 transition-colors',
+                          'absolute inset-0 bg-orange-500/0 transition-colors',
                           isActive
-                            ? 'bg-purple-500/0'
+                            ? 'bg-orange-500/0'
                             : 'group-hover:bg-black/5 dark:group-hover:bg-white/5',
                         )}
                       />
@@ -351,7 +352,7 @@ export function SceneSidebar({
                     !isFailed && !isActive && 'opacity-60',
                     isActive &&
                       !isFailed &&
-                      'bg-purple-50 dark:bg-purple-900/20 ring-1 ring-purple-200 dark:ring-purple-700 opacity-100',
+                      'bg-orange-50 dark:bg-orange-900/20 ring-1 ring-orange-200 dark:ring-orange-700 opacity-100',
                   )}
                 >
                   {/* Scene Header */}
@@ -361,7 +362,7 @@ export function SceneSidebar({
                         className={cn(
                           'text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shrink-0',
                           isActive && !isFailed
-                            ? 'bg-purple-600 dark:bg-purple-500 text-white shadow-sm shadow-purple-500/30'
+                            ? 'bg-orange-600 dark:bg-orange-500 text-white shadow-sm shadow-orange-500/30'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500',
                         )}
                       >
@@ -371,7 +372,7 @@ export function SceneSidebar({
                         className={cn(
                           'text-xs font-bold truncate transition-colors',
                           isActive && !isFailed
-                            ? 'text-purple-700 dark:text-purple-300'
+                            ? 'text-orange-700 dark:text-orange-300'
                             : isFailed
                               ? 'text-gray-700 dark:text-gray-200'
                               : 'text-gray-400 dark:text-gray-500',
