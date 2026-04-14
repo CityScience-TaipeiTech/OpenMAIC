@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   title: 'OpenMAIC',
   description:
     'The open-source AI interactive classroom. Upload a PDF to instantly generate an immersive, multi-agent learning experience.',
+  icons: {
+    icon: '/assets/logo-csl-black.png',
+    apple: '/assets/logo-csl-black.png',
+  },
 };
 
 export default function RootLayout({

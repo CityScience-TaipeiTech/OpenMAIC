@@ -1,55 +1,55 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'motion/react';
+import { AgentBar } from '@/components/agent/agent-bar';
+import { SpeechButton } from '@/components/audio/speech-button';
+import { GenerationToolbar } from '@/components/generation/generation-toolbar';
+import { LanguageSwitcher } from '@/components/language-switcher';
+import { SettingsDialog } from '@/components/settings';
+import { ThumbnailSlide } from '@/components/slide-renderer/components/ThumbnailSlide';
+import { Button } from '@/components/ui/button';
+import { Textarea as UITextarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useDraftCache } from '@/lib/hooks/use-draft-cache';
+import { useI18n } from '@/lib/hooks/use-i18n';
+import { useTheme } from '@/lib/hooks/use-theme';
+import { useImportClassroom } from '@/lib/import/use-import-classroom';
+import { createLogger } from '@/lib/logger';
+import { useMediaGenerationStore } from '@/lib/store/media-generation';
+import { useSettingsStore } from '@/lib/store/settings';
+import { AVATAR_OPTIONS, useUserProfileStore } from '@/lib/store/user-profile';
+import type { UserRequirements } from '@/lib/types/generation';
+import type { Slide } from '@/lib/types/slides';
+import { cn } from '@/lib/utils';
+import { storePdfBlob } from '@/lib/utils/image-storage';
+import {
+  StageListItem,
+  deleteStageData,
+  getFirstSlideByStages,
+  listStages,
+  renameStage,
+} from '@/lib/utils/stage-storage';
 import {
   ArrowUp,
+  BotOff,
   Check,
   ChevronDown,
+  ChevronUp,
   Clock,
   Copy,
   ImagePlus,
+  Monitor,
+  Moon,
   Pencil,
-  Trash2,
   Settings,
   Sun,
-  Moon,
-  Monitor,
-  BotOff,
-  ChevronUp,
-  Upload,
+  Trash2,
+  Upload
 } from 'lucide-react';
-import { useI18n } from '@/lib/hooks/use-i18n';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import { createLogger } from '@/lib/logger';
-import { Button } from '@/components/ui/button';
-import { Textarea as UITextarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { SettingsDialog } from '@/components/settings';
-import { GenerationToolbar } from '@/components/generation/generation-toolbar';
-import { AgentBar } from '@/components/agent/agent-bar';
-import { useTheme } from '@/lib/hooks/use-theme';
+import { AnimatePresence, motion } from 'motion/react';
 import { nanoid } from 'nanoid';
-import { storePdfBlob } from '@/lib/utils/image-storage';
-import type { UserRequirements } from '@/lib/types/generation';
-import { useSettingsStore } from '@/lib/store/settings';
-import { useUserProfileStore, AVATAR_OPTIONS } from '@/lib/store/user-profile';
-import {
-  StageListItem,
-  listStages,
-  deleteStageData,
-  renameStage,
-  getFirstSlideByStages,
-} from '@/lib/utils/stage-storage';
-import { ThumbnailSlide } from '@/components/slide-renderer/components/ThumbnailSlide';
-import type { Slide } from '@/lib/types/slides';
-import { useMediaGenerationStore } from '@/lib/store/media-generation';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useDraftCache } from '@/lib/hooks/use-draft-cache';
-import { SpeechButton } from '@/components/audio/speech-button';
-import { useImportClassroom } from '@/lib/import/use-import-classroom';
 
 const log = createLogger('Home');
 
@@ -59,12 +59,14 @@ const RECENT_OPEN_STORAGE_KEY = 'recentClassroomsOpen';
 interface FormState {
   pdfFile: File | null;
   requirement: string;
+  language: 'zh-TW' | 'en-US';
   webSearch: boolean;
 }
 
 const initialFormState: FormState = {
   pdfFile: null,
   requirement: '',
+  language: 'zh-TW',
   webSearch: false,
 };
 
@@ -99,6 +101,12 @@ function HomePage() {
       const savedWebSearch = localStorage.getItem(WEB_SEARCH_STORAGE_KEY);
       const updates: Partial<FormState> = {};
       if (savedWebSearch === 'true') updates.webSearch = true;
+      if (savedLanguage === 'zh-TW' || savedLanguage === 'en-US') {
+        updates.language = savedLanguage;
+      } else {
+        const detected = navigator.language?.startsWith('zh') ? 'zh-TW' : 'en-US';
+        updates.language = detected;
+      }
       if (Object.keys(updates).length > 0) {
         setForm((prev) => ({ ...prev, ...updates }));
       }
@@ -208,7 +216,7 @@ function HomePage() {
     toast.custom(
       (id) => (
         <div
-          className="w-[356px] rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-amber-950/60 dark:via-slate-900 dark:to-amber-950/60 shadow-lg shadow-amber-500/8 dark:shadow-amber-900/20 p-4 flex items-start gap-3 cursor-pointer"
+          className="w-[356px] rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-amber-950/60 dark:via-[oklch(0.27_0.003_250)] dark:to-amber-950/60 shadow-lg shadow-amber-500/8 dark:shadow-amber-900/20 p-4 flex items-start gap-3 cursor-pointer"
           onClick={() => {
             toast.dismiss(id);
             setSettingsOpen(true);
@@ -326,14 +334,7 @@ function HomePage() {
   };
 
   return (
-    <div className="min-h-[100dvh] w-full bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 flex flex-col items-center p-4 pt-16 md:p-8 md:pt-16 overflow-x-hidden">
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".zip"
-        onChange={handleFileChange}
-        className="hidden"
-      />
+    <div className="min-h-[100dvh] w-full bg-gradient-to-b from-[#FEFDF9] to-[#FAF7F0] dark:from-[oklch(0.25_0.003_250)] dark:to-[oklch(0.27_0.003_250)] flex flex-col items-center p-4 pt-16 md:p-8 md:pt-16 overflow-x-hidden">
       {/* ═══ Top-right pill (unchanged) ═══ */}
       <div
         ref={toolbarRef}
@@ -366,7 +367,7 @@ function HomePage() {
                 className={cn(
                   'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2',
                   theme === 'light' &&
-                    'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+                    'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
                 )}
               >
                 <Sun className="w-4 h-4" />
@@ -380,7 +381,7 @@ function HomePage() {
                 className={cn(
                   'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2',
                   theme === 'dark' &&
-                    'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+                    'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
                 )}
               >
                 <Moon className="w-4 h-4" />
@@ -394,7 +395,7 @@ function HomePage() {
                 className={cn(
                   'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2',
                   theme === 'system' &&
-                    'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+                    'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
                 )}
               >
                 <Monitor className="w-4 h-4" />
@@ -428,11 +429,11 @@ function HomePage() {
       {/* ═══ Background Decor ═══ */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
-          className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"
+          className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: '4s' }}
         />
         <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: '6s' }}
         />
       </div>
@@ -449,8 +450,8 @@ function HomePage() {
       >
         {/* ── Logo ── */}
         <motion.img
-          src="/logo-horizontal.png"
-          alt="OpenMAIC"
+          src="/assets/logo-csl-black.png"
+          alt="Logo"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
@@ -459,7 +460,20 @@ function HomePage() {
             stiffness: 200,
             damping: 20,
           }}
-          className="h-12 md:h-16 mb-2 -ml-2 md:-ml-3"
+          className="h-12 md:h-16 mb-2 -ml-2 md:-ml-3 dark:hidden"
+        />
+        <motion.img
+          src="/assets/logo-csl-white.png"
+          alt="Logo"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            delay: 0.1,
+            type: 'spring',
+            stiffness: 200,
+            damping: 20,
+          }}
+          className="h-12 md:h-16 mb-2 -ml-2 md:-ml-3 hidden dark:block"
         />
 
         {/* ── Slogan ── */}
@@ -479,7 +493,7 @@ function HomePage() {
           transition={{ delay: 0.35 }}
           className="w-full"
         >
-          <div className="w-full rounded-2xl border border-border/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-xl shadow-black/[0.03] dark:shadow-black/20 transition-shadow focus-within:shadow-2xl focus-within:shadow-violet-500/[0.06]">
+          <div className="w-full rounded-2xl border border-border/60 bg-white/80 dark:bg-card/80 backdrop-blur-xl shadow-xl shadow-black/[0.03] dark:shadow-black/20 transition-shadow focus-within:shadow-2xl focus-within:shadow-orange-500/[0.06]">
             {/* ── Greeting + Profile + Agents ── */}
             <div className="relative z-20 flex items-start justify-between">
               <GreetingBar />
@@ -495,6 +509,7 @@ function HomePage() {
               className="w-full resize-none border-0 bg-transparent px-4 pt-1 pb-2 text-[13px] leading-relaxed placeholder:text-muted-foreground/40 focus:outline-none min-h-[140px] max-h-[300px]"
               value={form.requirement}
               onChange={(e) => updateForm('requirement', e.target.value)}
+              // (e: React.ChangeEvent<HTMLTextAreaElement>) => updateForm('requirement', e.target.value)}
               onKeyDown={handleKeyDown}
               rows={4}
             />
@@ -769,10 +784,10 @@ function GreetingBar() {
           onClick={() => setOpen(true)}
         >
           <div className="shrink-0 relative">
-            <div className="size-8 rounded-full overflow-hidden ring-[1.5px] ring-border/30 group-hover:ring-violet-400/60 dark:group-hover:ring-violet-400/40 transition-all duration-300">
+            <div className="size-8 rounded-full overflow-hidden ring-[1.5px] ring-border/30 group-hover:ring-orange-400/60 dark:group-hover:ring-orange-400/40 transition-all duration-300">
               <img src={avatar} alt="" className="size-full object-cover" />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-white dark:bg-slate-800 border border-border/40 flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
+            <div className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-white dark:bg-secondary border border-border/40 flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
               <Pencil className="size-[7px] text-muted-foreground/70" />
             </div>
           </div>
@@ -804,7 +819,7 @@ function GreetingBar() {
             transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
             className="absolute left-4 top-3.5 z-50 w-64"
           >
-            <div className="rounded-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm ring-1 ring-black/[0.04] dark:ring-white/[0.06] shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_8px_-2px_rgba(0,0,0,0.3)] px-2.5 py-2">
+            <div className="rounded-2xl bg-white/95 dark:bg-secondary/95 backdrop-blur-sm ring-1 ring-black/[0.04] dark:ring-white/[0.06] shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_8px_-2px_rgba(0,0,0,0.3)] px-2.5 py-2">
               {/* ── Row: avatar + name ── */}
               <div
                 className="flex items-center gap-2.5 cursor-pointer transition-all duration-200"
@@ -822,13 +837,13 @@ function GreetingBar() {
                     setAvatarPickerOpen(!avatarPickerOpen);
                   }}
                 >
-                  <div className="size-8 rounded-full overflow-hidden ring-[1.5px] ring-violet-300/70 dark:ring-violet-500/40 transition-all duration-300">
+                  <div className="size-8 rounded-full overflow-hidden ring-[1.5px] ring-orange-300/70 dark:ring-orange-500/40 transition-all duration-300">
                     <img src={avatar} alt="" className="size-full object-cover" />
                   </div>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-white dark:bg-slate-800 border border-border/60 flex items-center justify-center"
+                    className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-white dark:bg-secondary border border-border/60 flex items-center justify-center"
                   >
                     <ChevronDown
                       className={cn(
@@ -860,7 +875,7 @@ function GreetingBar() {
                       />
                       <button
                         onClick={commitName}
-                        className="shrink-0 size-5 rounded flex items-center justify-center text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                        className="shrink-0 size-5 rounded flex items-center justify-center text-orange-500 hover:bg-orange-100 dark:hover:bg-orange-900/30"
                       >
                         <Check className="size-3" />
                       </button>
@@ -912,7 +927,7 @@ function GreetingBar() {
                               'size-7 rounded-full overflow-hidden bg-gray-50 dark:bg-gray-800 cursor-pointer transition-all duration-150',
                               'hover:scale-110 active:scale-95',
                               avatar === url
-                                ? 'ring-2 ring-violet-400 dark:ring-violet-500 ring-offset-0'
+                                ? 'ring-2 ring-orange-400 dark:ring-orange-500 ring-offset-0'
                                 : 'hover:ring-1 hover:ring-muted-foreground/30',
                             )}
                           >
@@ -924,7 +939,7 @@ function GreetingBar() {
                             'size-7 rounded-full flex items-center justify-center cursor-pointer transition-all duration-150 border border-dashed',
                             'hover:scale-110 active:scale-95',
                             isCustomAvatar(avatar)
-                              ? 'ring-2 ring-violet-400 dark:ring-violet-500 ring-offset-0 border-violet-300 dark:border-violet-600 bg-violet-50 dark:bg-violet-900/30'
+                              ? 'ring-2 ring-orange-400 dark:ring-orange-500 ring-offset-0 border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900/30'
                               : 'border-muted-foreground/30 text-muted-foreground/50 hover:border-muted-foreground/50',
                           )}
                           onClick={() => avatarInputRef.current?.click()}
@@ -1018,7 +1033,7 @@ function ClassroomCard({
       {/* Thumbnail — large radius, no border, subtle bg */}
       <div
         ref={thumbRef}
-        className="relative w-full aspect-[16/9] rounded-2xl bg-slate-100 dark:bg-slate-800/80 overflow-hidden transition-transform duration-200 group-hover:scale-[1.02]"
+        className="relative w-full aspect-[16/9] rounded-2xl bg-orange-50/60 dark:bg-secondary/80 overflow-hidden transition-transform duration-200 group-hover:scale-[1.02]"
       >
         {slide && thumbWidth > 0 ? (
           <ThumbnailSlide
@@ -1029,7 +1044,7 @@ function ClassroomCard({
           />
         ) : !slide ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="size-12 rounded-2xl bg-gradient-to-br from-violet-100 to-blue-100 dark:from-violet-900/30 dark:to-blue-900/30 flex items-center justify-center">
+            <div className="size-12 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 dark:from-orange-900/30 dark:to-amber-900/30 flex items-center justify-center">
               <span className="text-xl opacity-50">📄</span>
             </div>
           </div>
@@ -1102,7 +1117,7 @@ function ClassroomCard({
 
       {/* Info — outside the thumbnail */}
       <div className="mt-2.5 px-1 flex items-center gap-2">
-        <span className="shrink-0 inline-flex items-center rounded-full bg-violet-100 dark:bg-violet-900/30 px-2 py-0.5 text-[11px] font-medium text-violet-600 dark:text-violet-400">
+        <span className="shrink-0 inline-flex items-center rounded-full bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 text-[11px] font-medium text-orange-600 dark:text-orange-400">
           {classroom.sceneCount} {t('classroom.slides')} · {formatDate(classroom.updatedAt)}
         </span>
         {editing ? (
@@ -1118,7 +1133,7 @@ function ClassroomCard({
               onBlur={commitRename}
               maxLength={100}
               placeholder={t('classroom.renamePlaceholder')}
-              className="w-full bg-transparent border-b border-violet-400/60 text-[15px] font-medium text-foreground/90 outline-none placeholder:text-muted-foreground/40"
+              className="w-full bg-transparent border-b border-orange-400/60 text-[15px] font-medium text-foreground/90 outline-none placeholder:text-muted-foreground/40"
             />
           </div>
         ) : (

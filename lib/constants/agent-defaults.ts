@@ -12,13 +12,13 @@ export const AGENT_COLOR_PALETTE = [
   '#f59e0b',
   '#ec4899',
   '#06b6d4',
-  '#8b5cf6',
   '#f97316',
+  '#fb923c',
   '#14b8a6',
   '#e11d48',
-  '#6366f1',
+  '#f59e0b',
   '#84cc16',
-  '#a855f7',
+  '#ea580c',
 ] as const;
 
 /**

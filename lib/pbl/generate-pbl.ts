@@ -8,17 +8,16 @@
  * for multi-model compatibility.
  */
 
-import { tool, stepCountIs } from 'ai';
 import { callLLM } from '@/lib/ai/llm';
-import { z } from 'zod';
 import type { LanguageModel } from 'ai';
-import type { PBLProjectConfig } from './types';
-import { ModeMCP } from './mcp/mode-mcp';
-import { ProjectMCP } from './mcp/project-mcp';
+import { stepCountIs, tool } from 'ai';
+import { z } from 'zod';
 import { AgentMCP } from './mcp/agent-mcp';
 import { IssueboardMCP } from './mcp/issueboard-mcp';
+import { ModeMCP } from './mcp/mode-mcp';
+import { ProjectMCP } from './mcp/project-mcp';
 import { buildPBLSystemPrompt } from './pbl-system-prompt';
-import type { PBLMode } from './types';
+import type { PBLMode, PBLProjectConfig } from './types';
 
 export interface GeneratePBLConfig {
   projectTopic: string;
@@ -287,7 +286,10 @@ export async function generatePBLContent(
     {
       model,
       system: systemPrompt,
-      prompt: `Design a PBL project. Start in project_info mode by setting the project title and description.`,
+      prompt:
+        language === 'zh-TW'
+          ? `請設計一個PBL專案。現在從 project_info 模式開始，先設定專案標題和描述。`
+          : `Design a PBL project. Start in project_info mode by setting the project title and description.`,
       tools: pblTools,
       stopWhen: stepCountIs(30),
       onStepFinish: ({ toolCalls, text }) => {
@@ -357,7 +359,26 @@ async function postProcessPBL(
   try {
     callbacks?.onProgress?.('Generating initial questions for first issue...');
 
-    const context = `## Issue Information
+    const context =
+      language === 'zh-TW'
+        ? `## 任務資訊
+
+**標題**: ${firstIssue.title}
+**描述**: ${firstIssue.description}
+**負責人**: ${firstIssue.person_in_charge}
+${firstIssue.participants.length > 0 ? `**參與者**: ${firstIssue.participants.join('、')}` : ''}
+${firstIssue.notes ? `**備註**: ${firstIssue.notes}` : ''}
+
+## 你的任務
+
+根據以上任務資訊，生成1-3個具體、可操作的引導問題，幫助學生理解和完成這個任務。每個問題應：
+- 引導學生達成關鍵學習目標
+- 具體且可操作
+- 幫助分解問題
+- 鼓勵批判性思考
+
+請以編號列表格式回答。`
+        : `## Issue Information
 
 **Title**: ${firstIssue.title}
 **Description**: ${firstIssue.description}
@@ -389,6 +410,12 @@ Format the questions as a numbered list.`;
 
     const generatedQuestions = questionResult.text;
     firstIssue.generated_questions = generatedQuestions;
+
+    // Add welcome message to chat
+    const welcomeMessage =
+      language === 'zh-TW'
+        ? `你好！我是這個任務的提問助手：「${firstIssue.title}」\n\n為了引導你的學習，我準備了一些問題：\n\n${generatedQuestions}\n\n隨時 @question 我來獲取幫助或澄清！`
+        : `Hello! I'm your Question Agent for this issue: "${firstIssue.title}"\n\nTo help guide your work, I've prepared some questions for you:\n\n${generatedQuestions}\n\nFeel free to @question me anytime if you need help or clarification!`;
 
     config.chat.messages.push({
       id: `msg_welcome_${Date.now()}`,
