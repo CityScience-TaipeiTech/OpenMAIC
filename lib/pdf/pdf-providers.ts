@@ -495,6 +495,47 @@ async function pollMinerUTask(
 }
 
 /**
+ * Poll a MinerU v4 batch endpoint until extract_result[0].state is 'done' or 'failed'.
+ *
+ * The v4 batch API does NOT expose a top-level data.state; completion is determined by
+ * inspecting data.extract_result[0].state instead.
+ */
+async function pollMinerUBatch(
+  pollUrl: string,
+  headers: Record<string, string> = {},
+): Promise<Record<string, unknown>> {
+  const deadline = Date.now() + MINERU_POLL_TIMEOUT_MS;
+  let lastState = 'unknown';
+
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, MINERU_POLL_INTERVAL_MS));
+    const res = await fetch(pollUrl, { headers });
+    if (!res.ok) throw new Error(`MinerU poll error (${res.status}): ${await res.text()}`);
+    const json = (await res.json()) as { code: number; data: Record<string, unknown>; msg: string };
+    if (json.code !== 0) throw new Error(`MinerU API error: ${json.msg}`);
+
+    // v4 batch: state lives in extract_result[0].state, not data.state
+    type ExtractItem = { state: string; err_msg?: string; err_code?: string; full_zip_url?: string };
+    const extractResult = json.data.extract_result as ExtractItem[] | undefined;
+    const state = extractResult?.[0]?.state ?? 'pending';
+
+    if (state !== lastState) {
+      log.info(`[MinerU Precision] Batch state: ${lastState} → ${state}`);
+      lastState = state;
+    }
+
+    if (state === 'done') return json.data;
+
+    if (state === 'failed') {
+      const errMsg = extractResult?.[0]?.err_msg ?? extractResult?.[0]?.err_code ?? 'unknown error';
+      throw new Error(`MinerU Precision task failed: ${errMsg}`);
+    }
+  }
+
+  throw new Error(`MinerU Precision batch timed out (last known state: "${lastState}")`);
+}
+
+/**
  * Parse PDF using MinerU Agent Lightweight API (no auth required).
  *
  * Flow: POST /api/v1/agent/parse/file → PUT presigned URL → poll → download markdown
@@ -588,7 +629,7 @@ async function parseWithMinerUCloudPrecision(
   if (!uploadRes.ok) throw new Error(`MinerU Precision upload error (${uploadRes.status})`);
 
   // 3. Poll batch results
-  const batchResult = await pollMinerUTask(
+  const batchResult = await pollMinerUBatch(
     `${MINERU_CLOUD_BASE}/api/v4/extract-results/batch/${batch_id}`,
     { Authorization: `Bearer ${config.apiKey}` },
   );
