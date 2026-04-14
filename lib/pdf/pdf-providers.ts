@@ -173,7 +173,13 @@ export async function parsePDF(
       break;
 
     case 'mineru':
-      result = await parseWithMinerU(config, pdfBuffer);
+      if (config.mineruMode === 'cloud-agent') {
+        result = await parseWithMinerUCloudAgent(pdfBuffer);
+      } else if (config.mineruMode === 'cloud-precision') {
+        result = await parseWithMinerUCloudPrecision(config, pdfBuffer);
+      } else {
+        result = await parseWithMinerU(config, pdfBuffer);
+      }
       break;
 
     default:
@@ -437,6 +443,205 @@ function extractMinerUResult(fileResult: Record<string, unknown>): ParsedPdfCont
   };
 }
 
+const MINERU_CLOUD_BASE = 'https://mineru.net';
+const MINERU_POLL_INTERVAL_MS = 3000;
+const MINERU_POLL_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+/** Poll a URL until the task state is 'done' or 'failed' */
+async function pollMinerUTask(
+  pollUrl: string,
+  headers: Record<string, string> = {},
+): Promise<Record<string, unknown>> {
+  const deadline = Date.now() + MINERU_POLL_TIMEOUT_MS;
+  let lastState = 'unknown';
+  let waitingFileSince: number | null = null;
+
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, MINERU_POLL_INTERVAL_MS));
+    const res = await fetch(pollUrl, { headers });
+    if (!res.ok) throw new Error(`MinerU poll error (${res.status}): ${await res.text()}`);
+    const json = (await res.json()) as { code: number; data: Record<string, unknown>; msg: string };
+    if (json.code !== 0) throw new Error(`MinerU API error: ${json.msg}`);
+    const state = json.data.state as string;
+
+    if (state !== lastState) {
+      log.info(`[MinerU] Task state: ${lastState} → ${state}`);
+      lastState = state;
+    }
+
+    if (state === 'done') return json.data;
+
+    if (state === 'failed') {
+      const errMsg = (json.data.err_msg as string) ?? (json.data.err_code as string) ?? 'unknown error';
+      throw new Error(`MinerU task failed: ${errMsg}`);
+    }
+
+    // 'waiting-file' means MinerU has not yet received the uploaded file from OSS.
+    // If stuck for more than 30 s the upload did not register — fail fast.
+    if (state === 'waiting-file') {
+      if (!waitingFileSince) waitingFileSince = Date.now();
+      if (Date.now() - waitingFileSince > 30_000) {
+        throw new Error(
+          'MinerU task stuck in waiting-file: the file upload was not received by the server. ' +
+          'The presigned URL may have expired or the upload was rejected silently.',
+        );
+      }
+    } else {
+      waitingFileSince = null;
+    }
+  }
+
+  throw new Error(`MinerU task timed out (last known state: "${lastState}")`);
+}
+
+/**
+ * Parse PDF using MinerU Agent Lightweight API (no auth required).
+ *
+ * Flow: POST /api/v1/agent/parse/file → PUT presigned URL → poll → download markdown
+ * Limits: ≤10MB, ≤20 pages. Returns markdown only (no inline images).
+ */
+async function parseWithMinerUCloudAgent(pdfBuffer: Buffer): Promise<ParsedPdfContent> {
+  log.info('[MinerU Cloud Agent] Submitting task…');
+
+  // 1. Request upload URL + task ID
+  const initRes = await fetch(`${MINERU_CLOUD_BASE}/api/v1/agent/parse/file`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ file_name: 'document.pdf', enable_table: true, enable_formula: true }),
+  });
+  if (!initRes.ok) throw new Error(`MinerU Agent init error (${initRes.status}): ${await initRes.text()}`);
+  const initJson = (await initRes.json()) as { code: number; data: { task_id: string; file_url: string }; msg: string };
+  if (initJson.code !== 0) throw new Error(`MinerU Agent API error: ${initJson.msg}`);
+
+  const { task_id, file_url } = initJson.data;
+  log.info(`[MinerU Cloud Agent] task_id=${task_id}, uploading file…`);
+
+  // 2. Upload file to presigned URL (no extra headers — OSS signature covers URL only)
+  const uploadRes = await fetch(file_url, {
+    method: 'PUT',
+    body: pdfBuffer,
+  });
+  if (!uploadRes.ok) throw new Error(`MinerU Agent upload error (${uploadRes.status})`);
+
+  // 3. Poll until done
+  const result = await pollMinerUTask(`${MINERU_CLOUD_BASE}/api/v1/agent/parse/${task_id}`);
+
+  // 4. Download markdown
+  const mdUrl = result.markdown_url as string;
+  const mdRes = await fetch(mdUrl);
+  if (!mdRes.ok) throw new Error(`MinerU Agent markdown download error (${mdRes.status})`);
+  const markdown = await mdRes.text();
+
+  log.info(`[MinerU Cloud Agent] Done. ${markdown.length} chars of markdown.`);
+
+  return {
+    text: markdown,
+    images: [],
+    metadata: { pageCount: 0, parser: 'mineru-cloud-agent', taskId: task_id },
+  };
+}
+
+/**
+ * Parse PDF using MinerU Precision API (Bearer token required).
+ *
+ * Flow: POST /api/v4/file-urls/batch → PUT presigned URL → poll batch → download ZIP → extract
+ * Limits: ≤200MB, ≤600 pages. Returns markdown + images.
+ */
+async function parseWithMinerUCloudPrecision(
+  config: PDFParserConfig,
+  pdfBuffer: Buffer,
+): Promise<ParsedPdfContent> {
+  if (!config.apiKey) {
+    throw new Error('MinerU Precision API requires an API token (apiKey).');
+  }
+
+  const authHeaders = { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' };
+  log.info('[MinerU Cloud Precision] Requesting upload URL…');
+
+  // 1. Get presigned upload URL + batch ID
+  const batchRes = await fetch(`${MINERU_CLOUD_BASE}/api/v4/file-urls/batch`, {
+    method: 'POST',
+    headers: authHeaders,
+    body: JSON.stringify({
+      files: [{ name: 'document.pdf' }],
+      model_version: 'vlm',
+      enable_formula: true,
+      enable_table: true,
+    }),
+  });
+  if (!batchRes.ok) throw new Error(`MinerU Precision batch error (${batchRes.status}): ${await batchRes.text()}`);
+  const batchJson = (await batchRes.json()) as {
+    code: number;
+    data: { batch_id: string; file_urls: string[] };
+    msg: string;
+  };
+  if (batchJson.code !== 0) throw new Error(`MinerU Precision API error: ${batchJson.msg}`);
+
+  const { batch_id, file_urls } = batchJson.data;
+  log.info(`[MinerU Cloud Precision] batch_id=${batch_id}, uploading file…`);
+
+  // 2. Upload file to presigned URL (no extra headers — OSS signature covers URL only)
+  const uploadRes = await fetch(file_urls[0], {
+    method: 'PUT',
+    body: pdfBuffer,
+  });
+  if (!uploadRes.ok) throw new Error(`MinerU Precision upload error (${uploadRes.status})`);
+
+  // 3. Poll batch results
+  const batchResult = await pollMinerUTask(
+    `${MINERU_CLOUD_BASE}/api/v4/extract-results/batch/${batch_id}`,
+    { Authorization: `Bearer ${config.apiKey}` },
+  );
+
+  const fileResults = batchResult.extract_result as Array<{ state: string; full_zip_url: string }>;
+  const fileResult = fileResults?.[0];
+  if (!fileResult || fileResult.state !== 'done') {
+    throw new Error('MinerU Precision: no completed result in batch response');
+  }
+
+  // 4. Download and parse ZIP
+  const zipRes = await fetch(fileResult.full_zip_url);
+  if (!zipRes.ok) throw new Error(`MinerU Precision ZIP download error (${zipRes.status})`);
+  const zipBuffer = Buffer.from(await zipRes.arrayBuffer());
+
+  const JSZip = (await import('jszip')).default;
+  const zip = await JSZip.loadAsync(zipBuffer);
+
+  // Extract markdown (look for *.md file)
+  let markdown = '';
+  const imageData: Record<string, string> = {};
+
+  for (const [filename, file] of Object.entries(zip.files)) {
+    if (file.dir) continue;
+    if (filename.endsWith('.md')) {
+      markdown = await file.async('string');
+    } else if (/\.(png|jpg|jpeg|gif|webp)$/i.test(filename)) {
+      const base64 = await file.async('base64');
+      const ext = filename.split('.').pop()!.toLowerCase();
+      const mime = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : `image/${ext}`;
+      const key = filename.split('/').pop() ?? filename;
+      imageData[key] = `data:${mime};base64,${base64}`;
+    }
+  }
+
+  const imageMapping: Record<string, string> = {};
+  const pdfImages = Object.entries(imageData).map(([key, src], index) => {
+    const imageId = `img_${index + 1}`;
+    imageMapping[imageId] = src;
+    return { id: imageId, src, pageNumber: 0 };
+  });
+
+  log.info(
+    `[MinerU Cloud Precision] Done. ${pdfImages.length} images, ${markdown.length} chars of markdown.`,
+  );
+
+  return {
+    text: markdown,
+    images: Object.values(imageMapping),
+    metadata: { pageCount: 0, parser: 'mineru-cloud-precision', imageMapping, pdfImages },
+  };
+}
+
 /**
  * Get current PDF parser configuration from settings store
  * Note: This function should only be called in browser context
@@ -456,6 +661,7 @@ export async function getCurrentPDFConfig(): Promise<PDFParserConfig> {
     providerId: pdfProviderId,
     apiKey: providerConfig?.apiKey,
     baseUrl: providerConfig?.baseUrl,
+    mineruMode: providerConfig?.mineruMode,
   };
 }
 

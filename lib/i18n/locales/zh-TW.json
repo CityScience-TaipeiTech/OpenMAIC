@@ -598,6 +598,13 @@
     "pdfApiKey": "API Key",
     "pdfBaseUrl": "Base URL",
     "pdfDescription": "選擇 PDF 解析引擎，支援文字提取、圖片處理和表格識別",
+    "mineruMode": "連線模式",
+    "mineruMode_self-hosted": "自托管",
+    "mineruMode_cloud-agent": "雲端（免費）",
+    "mineruMode_cloud-precision": "雲端（精準版）",
+    "mineruModeDesc_self-hosted": "連線到本地部署的 MinerU 服務（mineru-api）。",
+    "mineruModeDesc_cloud-agent": "使用 MinerU 免費雲端 API，無需 Token。支援最大 10 MB / 20 頁。",
+    "mineruModeDesc_cloud-precision": "使用 MinerU 進階雲端 API，需要在 mineru.net 申請 API Token。支援最大 200 MB / 600 頁。",
     "pdfFeatures": "支援功能",
     "pdfParsingSettings": "PDF 解析設定",
     "pdfProvider": "PDF 解析器",
@@ -844,7 +851,9 @@
     "webSearchNoProvider": "請在設定中配置搜尋引擎 API Key",
     "webSearchOff": "點擊開啟",
     "webSearchOn": "已開啟",
-    "webSearchProvider": "搜尋引擎"
+    "webSearchProvider": "搜尋引擎",
+    "mineruNeedsBaseUrl": "尚未設定 MinerU 伺服器位址",
+    "configureMinerU": "前往設定 →"
   },
   "upload": {
     "fileTooLarge": "檔案過大，請選擇小於50MB的PDF檔案",

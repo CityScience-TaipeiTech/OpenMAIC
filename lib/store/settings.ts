@@ -93,6 +93,7 @@ export interface SettingsState {
       apiKey: string;
       baseUrl: string;
       enabled: boolean;
+      mineruMode?: import('@/lib/pdf/types').MinerUMode;
       isServerConfigured?: boolean;
       serverBaseUrl?: string;
     }
@@ -337,7 +338,7 @@ const getDefaultPDFConfig = () => ({
   pdfProviderId: 'unpdf' as PDFProviderId,
   pdfProvidersConfig: {
     unpdf: { apiKey: '', baseUrl: '', enabled: true },
-    mineru: { apiKey: '', baseUrl: '', enabled: false },
+    mineru: { apiKey: '', baseUrl: '', enabled: false, mineruMode: 'self-hosted' },
   } as Record<PDFProviderId, { apiKey: string; baseUrl: string; enabled: boolean }>,
 });
 

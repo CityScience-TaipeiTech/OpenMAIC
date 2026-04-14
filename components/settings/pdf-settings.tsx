@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/hooks/use-i18n';
 import { useSettingsStore } from '@/lib/store/settings';
 import { PDF_PROVIDERS } from '@/lib/pdf/constants';
-import type { PDFProviderId } from '@/lib/pdf/types';
+import type { PDFProviderId, MinerUMode } from '@/lib/pdf/types';
 import { CheckCircle2, Eye, EyeOff, Loader2, Zap, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -43,8 +43,10 @@ export function PDFSettings({ selectedProviderId }: PDFSettingsProps) {
   const pdfProvider = PDF_PROVIDERS[selectedProviderId];
   const isServerConfigured = !!pdfProvidersConfig[selectedProviderId]?.isServerConfigured;
   const providerConfig = pdfProvidersConfig[selectedProviderId];
+  const mineruMode: MinerUMode = (providerConfig as { mineruMode?: MinerUMode })?.mineruMode ?? 'self-hosted';
+  const isCloudMode = selectedProviderId === 'mineru' && mineruMode !== 'self-hosted';
   const hasBaseUrl = !!providerConfig?.baseUrl;
-  const needsRemoteConfig = selectedProviderId === 'mineru';
+  const needsRemoteConfig = selectedProviderId === 'mineru' && mineruMode === 'self-hosted';
 
   // Reset state when provider changes
   const [prevSelectedProviderId, setPrevSelectedProviderId] = useState(selectedProviderId);
@@ -98,45 +100,76 @@ export function PDFSettings({ selectedProviderId }: PDFSettingsProps) {
         </div>
       )}
 
-      {/* Base URL + API Key Configuration (for remote providers like MinerU) */}
-      {(needsRemoteConfig || isServerConfigured) && (
-        <>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm">{t('settings.pdfBaseUrl')}</Label>
-              <div className="flex gap-2">
-                <Input
-                  name={`pdf-base-url-${selectedProviderId}`}
-                  autoComplete="off"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  placeholder="http://localhost:8080"
-                  value={providerConfig?.baseUrl || ''}
-                  onChange={(e) =>
-                    setPDFProviderConfig(selectedProviderId, { baseUrl: e.target.value })
-                  }
-                  className="text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleTestConnection}
-                  disabled={testStatus === 'testing' || !hasBaseUrl}
-                  className="gap-1.5 shrink-0"
-                >
-                  {testStatus === 'testing' ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <>
-                      <Zap className="h-3.5 w-3.5" />
-                      {t('settings.testConnection')}
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
+      {/* MinerU mode selector */}
+      {selectedProviderId === 'mineru' && (
+        <div className="space-y-2">
+          <Label className="text-sm">{t('settings.mineruMode')}</Label>
+          <div className="flex gap-2">
+            {(['self-hosted', 'cloud-agent', 'cloud-precision'] as MinerUMode[]).map((mode) => (
+              <button
+                key={mode}
+                onClick={() =>
+                  setPDFProviderConfig(selectedProviderId, { mineruMode: mode } as Parameters<typeof setPDFProviderConfig>[1])
+                }
+                className={cn(
+                  'flex-1 rounded-md border px-3 py-2 text-xs font-medium transition-colors',
+                  mineruMode === mode
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border hover:border-primary/50',
+                )}
+              >
+                {t(`settings.mineruMode_${mode}`)}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">{t(`settings.mineruModeDesc_${mineruMode}`)}</p>
+        </div>
+      )}
 
+      {/* Base URL + API Key Configuration (for remote providers like MinerU) */}
+      {(needsRemoteConfig || isServerConfigured || isCloudMode) && (
+        <>
+          <div className={cn('grid gap-4', isCloudMode ? 'grid-cols-1' : 'grid-cols-2')}>
+            {/* Base URL — only for self-hosted */}
+            {!isCloudMode && (
+              <div className="space-y-2">
+                <Label className="text-sm">{t('settings.pdfBaseUrl')}</Label>
+                <div className="flex gap-2">
+                  <Input
+                    name={`pdf-base-url-${selectedProviderId}`}
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    placeholder="http://localhost:8080"
+                    value={providerConfig?.baseUrl || ''}
+                    onChange={(e) =>
+                      setPDFProviderConfig(selectedProviderId, { baseUrl: e.target.value })
+                    }
+                    className="text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestConnection}
+                    disabled={testStatus === 'testing' || !hasBaseUrl}
+                    className="gap-1.5 shrink-0"
+                  >
+                    {testStatus === 'testing' ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <>
+                        <Zap className="h-3.5 w-3.5" />
+                        {t('settings.testConnection')}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* API Key — required for cloud-precision, optional otherwise */}
+            {(mineruMode !== 'cloud-agent') && (
             <div className="space-y-2">
               <Label className="text-sm">
                 {t('settings.pdfApiKey')}
@@ -172,6 +205,7 @@ export function PDFSettings({ selectedProviderId }: PDFSettingsProps) {
                 </button>
               </div>
             </div>
+            )}
           </div>
 
           {/* Test result message */}
@@ -193,14 +227,13 @@ export function PDFSettings({ selectedProviderId }: PDFSettingsProps) {
             </div>
           )}
 
-          {/* Request URL Preview */}
-          {(() => {
+          {/* Request URL Preview — self-hosted only */}
+          {!isCloudMode && (() => {
             const effectiveBaseUrl = providerConfig?.baseUrl || '';
             if (!effectiveBaseUrl) return null;
-            const fullUrl = effectiveBaseUrl + '/file_parse';
             return (
               <p className="text-xs text-muted-foreground break-all">
-                {t('settings.requestUrl')}: {fullUrl}
+                {t('settings.requestUrl')}: {effectiveBaseUrl}/file_parse
               </p>
             );
           })()}

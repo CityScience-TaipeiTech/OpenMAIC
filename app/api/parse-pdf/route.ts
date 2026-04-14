@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { parsePDF } from '@/lib/pdf/pdf-providers';
 import { resolvePDFApiKey, resolvePDFBaseUrl } from '@/lib/server/provider-config';
-import type { PDFProviderId } from '@/lib/pdf/types';
+import type { PDFProviderId, MinerUMode } from '@/lib/pdf/types';
 import type { ParsedPdfContent } from '@/lib/types/pdf';
 import { createLogger } from '@/lib/logger';
 import { apiError, apiSuccess } from '@/lib/server/api-response';
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     const providerId = formData.get('providerId') as PDFProviderId | null;
     const apiKey = formData.get('apiKey') as string | null;
     const baseUrl = formData.get('baseUrl') as string | null;
+    const mineruMode = (formData.get('mineruMode') as MinerUMode | null) || undefined;
 
     if (!pdfFile) {
       return apiError('MISSING_REQUIRED_FIELD', 400, 'No PDF file provided');
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
       baseUrl: clientBaseUrl
         ? clientBaseUrl
         : resolvePDFBaseUrl(effectiveProviderId, baseUrl || undefined),
+      mineruMode,
     };
 
     // Convert PDF to buffer

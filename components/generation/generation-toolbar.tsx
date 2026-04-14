@@ -209,6 +209,25 @@ export function GenerationToolbar({
             </Select>
           </div>
 
+          {/* MinerU baseUrl missing warning */}
+          {pdfProviderId === 'mineru' &&
+            !pdfProvidersConfig['mineru']?.baseUrl &&
+            !pdfProvidersConfig['mineru']?.isServerConfigured && (
+              <div className="px-3 pb-2">
+                <div className="rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-2 flex items-center justify-between gap-2">
+                  <p className="text-xs text-amber-700 dark:text-amber-300">
+                    {t('toolbar.mineruNeedsBaseUrl')}
+                  </p>
+                  <button
+                    onClick={() => onSettingsOpen('pdf')}
+                    className="text-xs font-medium text-amber-700 dark:text-amber-300 hover:underline shrink-0"
+                  >
+                    {t('toolbar.configureMinerU')}
+                  </button>
+                </div>
+              </div>
+            )}
+
           {/* Upload area / file info */}
           <div className="px-3 pb-3">
             <input

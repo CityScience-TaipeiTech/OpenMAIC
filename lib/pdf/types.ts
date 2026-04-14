@@ -20,12 +20,21 @@ export interface PDFProviderConfig {
 }
 
 /**
+ * MinerU operating mode
+ * - self-hosted: POST {baseUrl}/file_parse (multipart, synchronous)
+ * - cloud-agent: mineru.net Agent API — no auth, async, markdown only
+ * - cloud-precision: mineru.net Precision API — Bearer token, async, ZIP with images
+ */
+export type MinerUMode = 'self-hosted' | 'cloud-agent' | 'cloud-precision';
+
+/**
  * PDF Parser Configuration for API calls
  */
 export interface PDFParserConfig {
   providerId: PDFProviderId;
   apiKey?: string;
   baseUrl?: string;
+  mineruMode?: MinerUMode;
 }
 
 // Note: ParsedPdfContent is imported from @/lib/types/pdf to avoid duplication

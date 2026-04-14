@@ -26,7 +26,9 @@
     "ttsTitle": "Text-to-Speech",
     "ttsHint": "Choose a voice for the AI teacher",
     "ttsPreview": "Preview",
-    "ttsPreviewing": "Playing..."
+    "ttsPreviewing": "Playing...",
+    "mineruNeedsBaseUrl": "MinerU server URL is not configured",
+    "configureMinerU": "Configure →"
   },
   "export": {
     "pptx": "Export PPTX",
@@ -786,6 +788,13 @@
     "pdfParsingSettings": "PDF Parsing Settings",
     "pdfDescription": "Choose PDF parsing engine with support for text extraction, image processing, and table recognition",
     "pdfProvider": "PDF Parser",
+    "mineruMode": "Connection Mode",
+    "mineruMode_self-hosted": "Self-hosted",
+    "mineruMode_cloud-agent": "Cloud (Free)",
+    "mineruMode_cloud-precision": "Cloud (Precision)",
+    "mineruModeDesc_self-hosted": "Connect to a locally deployed MinerU service (mineru-api).",
+    "mineruModeDesc_cloud-agent": "Use MinerU's free cloud API. No token required. Supports up to 10 MB / 20 pages.",
+    "mineruModeDesc_cloud-precision": "Use MinerU's premium cloud API. Requires an API token from mineru.net. Supports up to 200 MB / 600 pages.",
     "pdfFeatures": "Supported Features",
     "pdfApiKey": "API Key",
     "pdfBaseUrl": "Base URL",

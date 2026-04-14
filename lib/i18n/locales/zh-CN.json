@@ -26,7 +26,9 @@
     "ttsTitle": "语音合成",
     "ttsHint": "选择 AI 教师的朗读音色",
     "ttsPreview": "试听",
-    "ttsPreviewing": "播放中..."
+    "ttsPreviewing": "播放中...",
+    "mineruNeedsBaseUrl": "尚未配置 MinerU 服务器地址",
+    "configureMinerU": "前往设置 →"
   },
   "export": {
     "pptx": "导出 PPTX",
@@ -786,6 +788,13 @@
     "pdfParsingSettings": "PDF 解析设置",
     "pdfDescription": "选择 PDF 解析引擎，支持文本提取、图片处理和表格识别",
     "pdfProvider": "PDF 解析器",
+    "mineruMode": "连接模式",
+    "mineruMode_self-hosted": "自托管",
+    "mineruMode_cloud-agent": "云端（免费）",
+    "mineruMode_cloud-precision": "云端（精准版）",
+    "mineruModeDesc_self-hosted": "连接到本地部署的 MinerU 服务（mineru-api）。",
+    "mineruModeDesc_cloud-agent": "使用 MinerU 免费云端 API，无需 Token。支持最大 10 MB / 20 页。",
+    "mineruModeDesc_cloud-precision": "使用 MinerU 高级云端 API，需要在 mineru.net 申请 API Token。支持最大 200 MB / 600 页。",
     "pdfFeatures": "支持功能",
     "pdfApiKey": "API Key",
     "pdfBaseUrl": "Base URL",

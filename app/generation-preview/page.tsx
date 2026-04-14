@@ -188,6 +188,9 @@ function GenerationPreviewContent() {
         if (currentSession.pdfProviderConfig?.baseUrl?.trim()) {
           parseFormData.append('baseUrl', currentSession.pdfProviderConfig.baseUrl);
         }
+        if (currentSession.pdfProviderConfig?.mineruMode) {
+          parseFormData.append('mineruMode', currentSession.pdfProviderConfig.mineruMode);
+        }
 
         const parseResponse = await fetch('/api/parse-pdf', {
           method: 'POST',
