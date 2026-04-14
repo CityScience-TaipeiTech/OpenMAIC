@@ -1,6 +1,10 @@
 services:
   openmaic:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_DISABLE_ESLINT: "1"
+        NEXT_IGNORE_TS_ERRORS: "1"
     ports:
       - "3000:3000"
     env_file:

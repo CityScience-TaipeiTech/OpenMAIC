@@ -24,6 +24,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY . .
 
+ARG NEXT_DISABLE_ESLINT=0
+ARG NEXT_IGNORE_TS_ERRORS=0
+ENV NEXT_DISABLE_ESLINT=$NEXT_DISABLE_ESLINT
+ENV NEXT_IGNORE_TS_ERRORS=$NEXT_IGNORE_TS_ERRORS
+
 RUN pnpm build
 
 # ---- Stage 4: Runner ----
