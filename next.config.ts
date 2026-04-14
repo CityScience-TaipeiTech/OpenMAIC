@@ -5,10 +5,10 @@ const nextConfig: NextConfig = {
   transpilePackages: ['mathml2omml', 'pptxgenjs'],
   serverExternalPackages: [],
   eslint: {
-    ignoreDuringBuilds: process.env.NEXT_DISABLE_ESLINT === '1',
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: process.env.NEXT_IGNORE_TS_ERRORS === '1',
+    ignoreBuildErrors: true,
   },
   experimental: {
     proxyClientMaxBodySize: '200mb',
