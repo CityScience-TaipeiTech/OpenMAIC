@@ -42,6 +42,8 @@ export interface GenerationToolbarProps {
 
 // ─── Component ───────────────────────────────────────────────
 export function GenerationToolbar({
+  language,
+  onLanguageChange,
   webSearch,
   onWebSearchChange,
   onSettingsOpen,
@@ -365,7 +367,7 @@ export function GenerationToolbar({
             onClick={() => onLanguageChange(language === 'zh-TW' ? 'en-US' : 'zh-TW')}
             className={pillMuted}
           >
-            <Globe className="size-3.5" />
+            <Globe2 className="size-3.5" />
             <span>{language === 'zh-TW' ? '中文' : 'EN'}</span>
           </button>
         </TooltipTrigger>
