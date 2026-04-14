@@ -1,14 +1,14 @@
+import { ServerProvidersInit } from '@/components/server-providers-init';
+import { Toaster } from '@/components/ui/sonner';
+import { I18nProvider } from '@/lib/hooks/use-i18n';
+import { ThemeProvider } from '@/lib/hooks/use-theme';
+import 'animate.css';
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
+import 'katex/dist/katex.min.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
 import './globals.css';
-import 'animate.css';
-import 'katex/dist/katex.min.css';
-import { ThemeProvider } from '@/lib/hooks/use-theme';
-import { I18nProvider } from '@/lib/hooks/use-i18n';
-import { Toaster } from '@/components/ui/sonner';
-import { ServerProvidersInit } from '@/components/server-providers-init';
 
 const inter = localFont({
   src: '../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2',
@@ -17,7 +17,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'OpenMAIC',
+  title: 'AI Interactive Classroom',
   description:
     'The open-source AI interactive classroom. Upload a PDF to instantly generate an immersive, multi-agent learning experience.',
   icons: {

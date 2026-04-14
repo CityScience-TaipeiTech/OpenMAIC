@@ -130,12 +130,12 @@
   },
   "home": {
     "greetingWithName": "嗨，{{name}}",
-    "slogan": "Generative Learning in Multi-Agent Interactive Classroom"
+    "slogan": "Generative Learning in Virtual Interactive Classroom"
   },
   "media": {
     "asrCapability": "語音識別",
     "asrHint": "語音輸入參與討論",
-    "imageCapability": "圖像生成",
+    "imageCapability": "圖片生成",
     "imageHint": "課件中生成配圖",
     "language": "語言",
     "model": "模型",
